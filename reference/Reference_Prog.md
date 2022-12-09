@@ -82,13 +82,14 @@ The 32-bit constant **_base_data_** is 0x10000, which is larger than 12 bits all
   3.  gaussian.mem - a noise signal with a gaussian distribution.
   4.  noisy.mem - a noisy sinewave signal.
    
-* You can read any of these data into the data memory at the base address 0x10000 with the SystemVerilog directive:
+* You can read any of these data into the data memory data_array at the base address 0x10000 with the SystemVerilog directive:
 
 ```Verilog
-    $readmemh('xxxx.mem', 0x10000);
+    $readmemh('xxxx.mem', data_array, 0x10000);
 ```
 * This program has data or control hazards if run on a pipelined version of the RISC-V processor.  You must add NOP yourself to get round the hazards.
 
 * You are free to modify the pdf.s code but you should tell me what you have done and why.
 
 * Evidence of this program working would be the plot of the PDF on Vbuddy. This can be done by plotting the value of top->a0 AFTER the function which builds the distribution is finished.  Do not plot a0 value every cycle - this will take too long.
+  
