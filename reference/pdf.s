@@ -10,10 +10,10 @@ forever:
     J       forever
 
 init:       # function to initialise PDF buffer memory 
-    LI      a1, 0xff            # loop_count a1 = 255
+    LI      a1, 0x100           # loop_count a1 = 256
 _loop1:                         # repeat
-    SB      zero, base_pdf(a1)  #     mem[base_pdf+a1) = 0
     ADDI    a1, a1, -1          #     decrement a1
+    SB      zero, base_pdf(a1)  #     mem[base_pdf+a1) = 0
     BNE     a1, zero, _loop1    # until a1 = 0
     RET
 

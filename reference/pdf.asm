@@ -16,12 +16,12 @@ bfc0000c:	ffdff06f          	jal	zero,bfc00008 <forever> (File Offset: 0x1008)
 
 bfc00010 <init> (File Offset: 0x1010):
 init():
-bfc00010:	0ff00593          	addi	a1,zero,255
+bfc00010:	10000593          	addi	a1,zero,256
 
 bfc00014 <_loop1> (File Offset: 0x1014):
 _loop1():
-bfc00014:	10058023          	sb	zero,256(a1)
-bfc00018:	fff00593          	addi	a1,zero,-1
+bfc00014:	fff58593          	addi	a1,a1,-1
+bfc00018:	10058023          	sb	zero,256(a1)
 bfc0001c:	fe059ce3          	bne	a1,zero,bfc00014 <_loop1> (File Offset: 0x1014)
 bfc00020:	00008067          	jalr	zero,0(ra)
 

@@ -130,9 +130,14 @@ Deliverables must include the following:
 4. A `test` folder with your F1 program. The folder must also contain test results for your processor successfully executing the F1 program and my reference program.
 
 You must also provide a Makefile or a shell script that allows the assessor to build your processor model and run the testbench to repeat what you have done.
+<center>
+
+>**LATE ADDITION** <br>
+>To help me work out who did what, you are required to add a table to show individual contributions to which files in the repo:
+><p align="center"> <img src="images/contributions.jpg"> 
 
 <br>
-
+</center>
 ___
 
 ## Assessment Criteria
