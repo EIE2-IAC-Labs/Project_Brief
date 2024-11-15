@@ -5,7 +5,7 @@
 ---
 ## Team Project - RISC-V RV32I Processor
 
-**_Peter Cheung, V1.3 - 23 Nov 2023_**
+**_Peter Cheung, V1.4 - 03 Nov 2024_**
 
 ---
 
@@ -14,11 +14,12 @@
 ## Objectives
 
 * To learn RISC-V 32-bit integer instruction set architecture 
-* To implememnt a single-cycle RV32I instruction set in a microarchitecture
-* To implemententing the F1 starting light algorithm in RV32I assembly language
-* To verify your RV32I design by executing the F1 light program
-* As stretched goal, to implement a simple pipelined version of the microarchitecutre with hazard detection and mitigation
+* To implement a single-cycle RV32I instruction set in a microarchitecture
+* To implement the F1 starting light algorithm in RV32I assembly language
+* To verify your RV32I design
+* As stretched goal, to implement a simple pipelined version of the microarchitecture with hazard detection and mitigation
 * As a further stretched goal, add data cache to the pipelined RV32I
+* As a further streched goal, complete the RV32I processor
 
 <br>
 
@@ -27,18 +28,19 @@ ___
 ## Learning the RV32I Instruction Set
 ___
 
-Before you start the hardware design, every team member should learn the RV32I in some detail by jointly creating your team's assembly language program to implement the F1 starting light algorithm from Lab 3 in RV32I instructions.  
+Before you start the hardware design, every team member should learn the RV32I in some detail by jointly creating your team's assembly language program to implement the F1 starting light algorithm from Lab 3 in RV32I instructions.
 
-Your implementation **MUST** use at least one subroutine so that you must include the **Jump and Link (JAL)** instruction.  Your team's F1 program, together with another REFERENCE program from me will be used to test your processor implementation.
+[This document](https://cs.sfu.ca/~ashriram/Courses/CS295/assets/notebooks/RISCV/RISCV_CARD.pdf) contains the instructions to be tested. You do not need to implement the `ecall` and the `ebreak` instructions. Note that the **Jump and Link (JAL)** instruction must be implemented. Your team's F1 program, together with [integration tests](verification.md) will be used to test your processor implementation.
 
 <p align="center"> <img src="images/RISC-V_F1.jpg" /> </p><BR>
+
 Unlike Lab 3, the clock signal does not control a hardware counter or state machine directly. Instead it is used to clock the RISC-V processor to execute one instruction.  The Reset signal also resets only the processor to start the program, and is not used to reset counters or a state machine.  The trigger signal is used to tell RISC-V when to start the F1 light sequence.  How it is implemented in the RISC-V is not defined.  You can decide, for example, that the trigger is automatic -- as soon as the program starts, the F1 light sequence is triggered.  
 
 You should also write your assembly language program using the following memory map. 
 
 <p align="center"> <img src="images/memory.jpg" /> </p><BR>
 
-This memory map is chosen to help debugging your design later.  What is the size of the data and instruction memory specified by this map?  Remember, both instructions and data are 32-bits or 4 bytes.  RISC-V is a byte-addressing processor with least significant byte in lower address. (This is called "little-endian".)
+This memory map is chosen to help debugging your design later.  What is the size of the data and instruction memory specified by this map?  Remember, both instructions and data are 32-bits or 4 bytes.  RISC-V is a byte-addressing processor with least significant byte in lower address. This is called "little-endian".
 
 <br>
 
@@ -49,13 +51,15 @@ ___
 
 >This is the basic goal for every team - to implement the basic RV32I instruction set by extending your Reduced RISC-V design in Lab 4. 
 
-You do not need to implement every instruction in the RV32I instruction set, but you must implement the JAL instruction so that you can run code that uses subroutines.
-
-To simplify matter, you should assume that you have separate instruction and data memory.
+To simplify matters, you should assume that you have separate instruction and data memories.
 
 Similar to Lab 4, you must divide the task into roughly equal components, and each student will then be responsbile for one component.  You can continue your role as in Lab 4 or, to diversify your learning, deliberately assigning a different component to your team members. The assessment of this project coursework will be mostly based on individual contributions with a smaller component based on the team's success.  Details on assessment and deliverable are provided later in this project brief.
 
-The testbench and test protocol for this processor is to provide evidence that your team's design is working for your team's F1 starting light program.  You must also show evidence that your design works for the REFERENCE program that I have provided in this repo.
+Your processor must pass a reasonable amount of tests provided in the repo, as well as work for your team's F1 starting light program. All tests are provided in this repo. See [verification.md](verification.md#quick-start) for more information.
+
+>[!NOTE] 
+> You do NOT have to pass all the provided test cases. Move on when you
+have passed 15-20 tests. Note that debugging at this stage is easier.
 
 <br>
 
@@ -73,7 +77,7 @@ A simple solution is to handle data and control hazards in software - by identif
 
 For full credit, you are expected in implement hardware hazard detection, forwarding/bypassing or stalling hardware.
 
-As before, make sure that your design is working by successfully running the team's version of the F1 light and the reference program.
+As before, make sure that your design is working by successfully running the tests.
 
 <br>
 
@@ -88,19 +92,26 @@ The data cache capacity should be no more than 1024 bytes.  You may choose to im
 <br>
 
 ___
+## Stretch Goal 3: Full RV32I Design
+___
+> You may decide that it is easier to do this before or whilst creating a pipelined processor.
 
-## Deliverable
+If you really have time, then complete the full RISC-V ISA. This means that all of the provided tests pass.
+
 ___
 
-All deliverables must be via your Team's project coursework repo via the github link you have provided for your team.   The name of the repo has your team number at the end, and is private to your team, but accessible by myself.  All deliverables **must be** in the repo by *__mid-night Friday 15 December 2023__* when all coursework team repos must be frozen.  
+## Deliverables
+___
+
+All deliverables must be via your Team's project coursework repo via the GitHub link you have provided for your team. The name of the repo has your team number at the end, and is private to your team, but accessible by myself.  All deliverables **must be** in the repo by *__mid-night Friday 15 December 2023__* when all coursework team repos must be frozen.  
 
 Deliverables must include the following:
-1. A `README.md` file in the root directory that briefly describe what your team has achieved. This is a **joint statement** for the team. 
-2. Each individual's **personal statement** explaining what you contributed, reflection about what you have learned in this project, mistakes you made, special design decisons, and what you might do differently if you were to do it again or have more time.  This statement must be succinct and to the point, yet must include sufficient details for me to check against the commit history of the repo so that any claims can be verified. Including links to a selection of specific commits which demonstrate your work would be most helpful. If you work with another member of your group on a module, make sure to give them [co-author credit](https://docs.github.com/en/pull-requests/committing-changes-to-your-project/creating-and-editing-commits/creating-a-commit-with-multiple-authors#creating-co-authored-commits-on-the-command-line). Additionally, try to make meaningful commit messages.
-3. A folder called `rtl` with the source of your processor. If you have multiple versions due to the stretched goals, you may use multiple branches. Your `README.md` file must provide sufficient explanation for me to understand what you have done and how to find your work on all branches you wish to be assessed.  The `rtl` folder should also include a `README.md` file listing who wrote which module/file.
-4. A `test` folder with your F1 program. The folder must also contain test results for your processor successfully executing the F1 program and my reference program.
+1. A **brief** `README.md` file in the root directory that describes what your team has achieved. This is a **joint statement** for the team. 
+2. Each individual's **personal statement** explaining what you contributed, a reflection about what you have learned in this project, mistakes you made, special design decisons, and what you might do differently if you were to do it again or have more time.  This statement must be succinct and to the point, yet must include sufficient details for me to check against the commit history of the repo so that any claims can be verified. Including links to a selection of specific commits which demonstrate your work would be most helpful. If you work with another member of your group on a module, make sure to give them [co-author credit](https://docs.github.com/en/pull-requests/committing-changes-to-your-project/creating-and-editing-commits/creating-a-commit-with-multiple-authors#creating-co-authored-commits-on-the-command-line). Additionally, try to make meaningful commit messages.
+3. A folder called `rtl` with the source of your processor. If you have multiple versions due to the stretched goals, you may use branches/[tags](https://git-scm.com/book/en/v2/Git-Basics-Tagging). Your `README.md` file must provide sufficient explanation for me to understand what you have done and how to find your work on all branches/tags you wish to be assessed.  The `rtl` folder should also include a `README.md` file listing who wrote which module/file.
+4. A `tb` folder with your F1 program. The folder must also contain test results for your processor successfully executing the F1 program. 
 
-You must also provide a Makefile or a shell script that allows me to build your processor model and run the testbench to repeat what you have done.
+You must also provide a Makefile or a shell script that allows me to build your processor model and run the tests provided in this repo. You must also provide an option to run your F1 program.
 
 <br>
 
