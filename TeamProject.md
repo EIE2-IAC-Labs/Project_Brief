@@ -5,7 +5,7 @@
 ---
 ## Team Project - RISC-V RV32I Processor
 
-**_Peter Cheung, V1.5 - 18 Nov 2024_**
+**_Peter Cheung, V2.0 - 25 Nov 2024_**
 
 ---
 
@@ -17,7 +17,8 @@
 * To implement a single-cycle RV32I instruction set in a microarchitecture
 * To implement the F1 starting light algorithm in RV32I assembly language
 * To verify your RV32I design
-* As stretched goal, to implement a simple pipelined version of the microarchitecture with hazard detection and mitigation
+* As stretched goal, to implement a simple pipelined version of the microarchitecture with 
+hazard detection and mitigation
 * As a further stretched goal, add data cache to the pipelined RV32I
 * As a further streched goal, complete the RV32I processor
 
@@ -28,9 +29,12 @@ ___
 ## Learning the RV32I Instruction Set
 ___
 
-Before you start the hardware design, every team member should learn the RV32I in some detail by jointly creating your team's assembly language program to implement the F1 starting light algorithm from Lab 3 in RV32I instructions.
+Before you start the hardware design, every team member should learn the RV32I in some detail by jointly creating your team's assembly language program 
+to implement the F1 starting light algorithm from Lab 3 in RV32I instructions.
 
-[This document](https://cs.sfu.ca/~ashriram/Courses/CS295/assets/notebooks/RISCV/RISCV_CARD.pdf) contains the instructions to be tested. You do not need to implement the `ecall` and the `ebreak` instructions. Note that the **Jump and Link (JAL)** instruction must be implemented. Your team's F1 program, together with [integration tests](verification.md) will be used to test your processor implementation.
+[This document](https://cs.sfu.ca/~ashriram/Courses/CS295/assets/notebooks/RISCV/RISCV_CARD.pdf) contains the instructions to be tested. 
+You do not need to implement the `ecall` and the `ebreak` instructions. Note that the **Jump and Link (JAL)** instruction must be implemented. 
+Your team's F1 program, together with [integration tests](verification.md) will be used to test your processor implementation.
 
 <p align="center"> <img src="images/RISC-V_F1.jpg" /> </p><BR>
 
@@ -40,7 +44,8 @@ You should also write your assembly language program using the following memory 
 
 <p align="center"> <img src="images/memory.jpg" /> </p><BR>
 
-This memory map is chosen to help debugging your design later.  What is the size of the data and instruction memory specified by this map?  Remember, both instructions and data are 32-bits or 4 bytes.  RISC-V is a byte-addressing processor with least significant byte in lower address. This is called "little-endian".
+This memory map is chosen to help debugging your design later.  What is the size of the data and instruction memory specified by this map?  Remember, both instructions and data are 32-bits or 4 bytes.  RISC-V is a byte-addressing processor with least significant byte in lower address. 
+This is called "little-endian".  Furthermore, although RISC-V full addressing space is 2^32, which is hugh, you do not need to specify memory that occupies the entire memory space.  In fact, trying to do so will fail because the Verilator model cannot handle such a block of memory.
 
 <br>
 
@@ -53,13 +58,24 @@ ___
 
 To simplify matters, you should assume that you have separate instruction and data memories.
 
-Similar to Lab 4, you must divide the task into roughly equal components, and each student will then be responsbile for one component.  You can continue your role as in Lab 4 or, to diversify your learning, deliberately assigning a different component to your team members. The assessment of this project coursework will be mostly based on individual contributions with a smaller component based on the team's success.  Details on assessment and deliverable are provided later in this project brief.
+Similar to Lab 4, you must divide the task into roughly equal components, and each student will then be responsbile for one component.  You can continue your role as in Lab 4 or, to diversify your learning, deliberately assigning a different component to your team members. 
+The assessment of this project coursework will be mostly based on individual contributions with a smaller component based on the team's success.  Details on assessment and deliverable are provided later in this project brief.
 
-Your processor must pass a reasonable amount of tests provided in the repo, as well as work for your team's F1 starting light program. All tests are provided in this repo. See [verification.md](verification.md#quick-start) for more information.
+You need to verify that your design works. A fully verified design will have to pass three test:
+1. Your design should pass your team's F1 starting light program.
+2. Your design should also pass the reference program __"pdf.asm"__ provided in the folder *_"tb/reference"_*. Details about how this reference program works 
+and what it does is given in the [markdown file](tb/reference/Reference_Prog.md) in this folder.
+3. Your design should also pass the following test programs provided in the folder *_"tb/c"_* :
+>*   return_5.c
+>*   01-add.c
+>*   03-xor.c
+>*   09-sltu.c
+>*   12-bne.c
+>*   17-jalr.c
 
 >[!NOTE] 
-> You do NOT have to pass all the provided test cases. Move on when you
-have passed 15-20 tests. Note that debugging at this stage is easier.
+> The full set of test programs are provided for those who wish to test their RISC-V design fully.  These are particularly useful for regression testing.
+See [verification.md](verification.md#quick-start) for more information.
 
 <br>
 
@@ -77,7 +93,7 @@ A simple solution is to handle data and control hazards in software - by identif
 
 For full credit, you are expected in implement hardware hazard detection, forwarding/bypassing or stalling hardware.
 
-As before, make sure that your design is working by successfully running the tests.
+As before, make sure that your design is working by successfully running the various tests.
 
 <br>
 
@@ -85,9 +101,12 @@ ___
 ## Stretch Goal 2: Adding Data Memory Cache
 ___
 
-As an additional stretch goal to the pipelined processor, you may also add data cache to your data memory. This is of course a "toy" exercise because your data memory is already a single-cycle memory and is very fast. Adding cache memory may make this slower, not faster.  However, in real designs, data memory could be quite slow. Then, adding cache memory will help performance.  Nevertheless, you may learn how cache memory works by implement it as an addition to your pipelined processor.
+As an additional stretch goal to the pipelined processor, you may also add data cache to your data memory. This is of course a "toy" exercise because 
+your data memory is already a single-cycle memory and is very fast. Adding cache memory may make this slower, not faster.  However, in real designs, 
+data memory could be quite slow. Adding cache memory will help performance.  Nevertheless, you may learn how cache memory works by implement 
+it as an addition to your pipelined processor.
 
-The data cache capacity should be no more than 1024 bytes.  You may choose to implement a direct-mapped or associative cache.
+The data cache capacity could be 4096 bytes (or 1k words).  For full credit, you are expected to implement at least a 2-set associative cache.
 
 <br>
 
@@ -103,15 +122,26 @@ ___
 ## Deliverables
 ___
 
-All deliverables must be via your Team's project coursework repo via the GitHub link you have provided for your team. The name of the repo has your team number at the end, and is private to your team, but accessible by myself.  All deliverables **must be** in the repo by *__mid-night Friday 15 December 2023__* when all coursework team repos must be frozen.  
+All deliverables must be via your Team's project coursework repo via the GitHub link you have provided for your team. The name of the repo has your team 
+number at the end, and is private to your team, but accessible by myself.  All deliverables **must be** in the repo by *__23.59 Friday 13 December 2024__* 
+when all coursework team repos must be frozen.  
 
 Deliverables must include the following:
 1. A **brief** `README.md` file in the root directory that describes what your team has achieved. This is a **joint statement** for the team. 
-2. Each individual's **personal statement** explaining what you contributed, a reflection about what you have learned in this project, mistakes you made, special design decisons, and what you might do differently if you were to do it again or have more time.  This statement must be succinct and to the point, yet must include sufficient details for me to check against the commit history of the repo so that any claims can be verified. Including links to a selection of specific commits which demonstrate your work would be most helpful. If you work with another member of your group on a module, make sure to give them [co-author credit](https://docs.github.com/en/pull-requests/committing-changes-to-your-project/creating-and-editing-commits/creating-a-commit-with-multiple-authors#creating-co-authored-commits-on-the-command-line). Additionally, try to make meaningful commit messages.
+2. Each individual's **personal statement** explaining what you contributed, a reflection about what you have learned in this project, 
+mistakes you made, special design decisons, and what you might do differently if you were to do it again or have more time.  
+This statement must be succinct and to the point, yet must include sufficient details for me to check against the commit history of the repo so that 
+any claims can be verified. Including links to a selection of specific commits which demonstrate your work would be most helpful. If you work with 
+another member of your group on a module, make sure to give them 
+[co-author credit](https://docs.github.com/en/pull-requests/committing-changes-to-your-project/creating-and-editing-commits/creating-a-commit-with-multiple-authors#creating-co-authored-commits-on-the-command-line). Additionally, try to make meaningful commit messages.
 3. A folder called `rtl` with the source of your processor. If you have multiple versions due to the stretched goals, you may use branches/[tags](https://git-scm.com/book/en/v2/Git-Basics-Tagging). Your `README.md` file must provide sufficient explanation for me to understand what you have done and how to find your work on all branches/tags you wish to be assessed.  The `rtl` folder should also include a `README.md` file listing who wrote which module/file.
-4. A `tb` folder with your F1 program. The folder must also contain test results for your processor successfully executing the F1 program. 
+4. A enhanced `tb` folder containing: 
+>* Your F1 program and evidence that your processor successfully executing the F1 program (e.g. short video).
+>* The 'reference' program working with evidence (e.g. screenshot of the probability distribution function plot).
+>* Results of running the specified test programs.
 
-You must also provide a Makefile or a shell script that allows me to build your processor model and run the tests provided in this repo. You must also provide an option to run your F1 program.
+You must also provide a Makefile or a shell script that allows me to build your processor model and run the tests provided in this repo. 
+You must also provide an option to run your F1 program.
 
 <br>
 
@@ -122,7 +152,9 @@ ___
 
 Assessment for this coursework, which accounts for 25% of the entire two-terms IAC module, is divided into two components:
 1. Team achievement (40%) - This component of the marks is common to all team members and is dependent on the overall achievement of the team.
-2. Individual achievement (60%) - This component of the marks is awarded to individual student based on declaration by the team of the individual contribution, with verification based on evidence (e.g. based on the git commit and push profile of an individual), individual account of his/her contributions and reflections, and the actual deliverables by the individual in terms of SystemVerilog, C++ codes and/or test results.
+2. Individual achievement (60%) - This component of the marks is awarded to individual student based on declaration by the team of the individual contribution, 
+with verification based on evidence (e.g. based on the git commit and push profile of an individual), individual account of his/her contributions and reflections, 
+and the actual deliverables by the individual in terms of SystemVerilog, C++ codes and/or test results.
 
 This table shows the level of team's achievement and the range of grade to be awarded.
 
