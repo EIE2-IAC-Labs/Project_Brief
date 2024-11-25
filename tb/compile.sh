@@ -4,7 +4,7 @@
 
 # Default vars
 SCRIPT_DIR=$(dirname "$(realpath "$0")")
-output_file="../rtl/program.hex"
+output_file="$SCRIPT_DIR/program.hex"
 
 # Handle terminal arguments
 if [[ $# -eq 0 ]]; then
