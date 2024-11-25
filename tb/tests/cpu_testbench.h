@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility>
+
 #include "Vdut.h"
 #include "verilated.h"
 #include "verilated_vcd_c.h"
@@ -68,10 +70,16 @@ public:
         delete context_;
     }
 
-    void compile(const std::string &program)
+    void assemble(const std::string &program)
     {
-        // Compile
-        system(("./compile.sh " + program).c_str());
+        // Assemble program (std::ignore avoids unused result warnings)
+        std::ignore = system(("./assemble.sh " + program).c_str());
+    }
+
+    void setData(const std::string &data_file)
+    {
+        // Fill data.hex with program data
+        std::ignore = system(("cp " + data_file + " data.hex").c_str());
     }
 
 protected:

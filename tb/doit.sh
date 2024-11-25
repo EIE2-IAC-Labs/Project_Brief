@@ -29,6 +29,9 @@ rm -rf obj_dir
 
 cd $SCRIPT_DIR
 
+# Create an empty default data file
+touch "data.hex"
+
 # Iterate through files
 for file in "${files[@]}"; do
     name=$(basename "$file" _tb.cpp | cut -f1 -d\-)
