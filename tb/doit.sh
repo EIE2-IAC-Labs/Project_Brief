@@ -24,13 +24,10 @@ else
     files=("$@")
 fi
 
-# Cleanup
-rm -rf obj_dir
-
 cd $SCRIPT_DIR
 
-# Create an empty default data file
-touch "data.hex"
+# Wipe previous test output
+rm -rf test_out/*
 
 # Iterate through files
 for file in "${files[@]}"; do
@@ -65,12 +62,5 @@ for file in "${files[@]}"; do
 
 done
 
-# Exit as a pass or fail (for CI purposes)
-if [ $fails -eq 0 ]; then
-    echo "${GREEN}Success! All ${passes} test(s) passed!"
-    exit 0
-else
-    total=$((passes + fails))
-    echo "${RED}Failure! Only ${passes} test(s) passed out of ${total}."
-    exit 1
-fi
+# Save obj_dir in test_out
+mv obj_dir test_out/

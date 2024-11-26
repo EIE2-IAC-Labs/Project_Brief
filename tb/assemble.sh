@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Usage: ./compile.sh <file.s>
+# Usage: ./assemble.sh <file.s>
 
 # Default vars
 SCRIPT_DIR=$(dirname "$(realpath "$0")")
@@ -16,25 +16,13 @@ input_file=$1
 basename=$(basename "$input_file" | sed 's/\.[^.]*$//')
 parent=$(dirname "$input_file")
 file_extension="${input_file##*.}"
+LOG_DIR="$SCRIPT_DIR/test_out/$basename"
 
-# # Compile the C code if necessary.
-# if [ $file_extension == "s" ]; then
-#     # IMPORTANT: MUST NOT OPTIMIZE COMPILER! Or instructions could be lost!
-#     riscv64-unknown-elf-gcc -S -g -O0 -fno-builtin -static \
-#                             -march=rv32im -mabi=ilp32 \
-#                             -o "${basename}.s" $input_file \
-#                             -Wno-unused-result
-#     # To get test case 24 passing, you need to modify ^^^^
-#     input_file="${basename}.s"
-# fi
+# Create output directory for disassembly, hex and waveforms
+mkdir -p $LOG_DIR
 
 riscv64-unknown-elf-as -R -march=rv32im -mabi=ilp32 \
                         -o "a.out" "$input_file"
-
-# # Remove the .s file if necessary
-# if [ $file_extension == "c" ]; then
-#     rm ${input_file}
-# fi
 
 riscv64-unknown-elf-ld -melf32lriscv \
                         -e 0xBFC00000 \
@@ -49,7 +37,7 @@ rm *dis 2>/dev/null
 # This generates a disassembly file
 # Memory in wrong place, but makes it easier to read (should be main = 0xbfc00000)
 riscv64-unknown-elf-objdump -f -d --source -m riscv \
-                            a.out.reloc > ${SCRIPT_DIR}/${basename}.dis
+                            a.out.reloc > ${LOG_DIR}/program.dis
 
 # Formats into a hex file
 od -v -An -t x1 "a.bin" | tr -s '\n' | awk '{$1=$1};1' > "${output_file}"
