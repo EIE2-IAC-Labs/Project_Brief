@@ -61,7 +61,7 @@ You need to verify that your design works. A fully verified design will have to 
 1. Your design should pass your team's F1 starting light program.
 2. Your design should also pass the reference program __"pdf.asm"__ provided in the folder *_"tb/reference"_*. Details about how this reference program works
 and what it does is given in the [markdown file](tb/reference/Reference_Prog.md) in this folder.
-3. Your design should also pass all five programs provided in the folder *_"tb/asm"_*. You should read about how these tests work in [markdown file](tb/verification.md). Note that these tests all use the same instructions as the reference PDF program.
+3. Your design should also pass all five programs provided in the folder *_"tb/asm"_*. You should read about how these tests work in this [markdown file](tb/verification.md). Note that these tests all use the same instructions as the reference PDF program.
 
 <br>
 
