@@ -24,9 +24,8 @@ public:
         name_ = name;
         // Assemble the program
         std::ignore = system(("./assemble.sh asm/" + name_ + ".s").c_str());
-        // Create files for program and data memory
+        // Create default empty file for data memory
         std::ignore = system("touch data.hex");
-        std::ignore = system("touch program.hex");
     }
 
     // CPU instantiated outside of SetUp to allow for correct
@@ -44,6 +43,7 @@ public:
         // Initialise inputs
         top_->clk = 1;
         top_->rst = 1;
+        top_->trigger = 0;
         runSimulation(10);  // Process reset
         top_->rst = 0;
     }
