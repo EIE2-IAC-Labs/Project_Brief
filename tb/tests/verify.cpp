@@ -7,7 +7,7 @@
 
 TEST_F(CpuTestbench, TestAddiBne)
 {
-    assemble("asm/1_addi_bne.s");
+    setupTest("1_addi_bne");
     initSimulation();
     runSimulation(CYCLES);
     EXPECT_EQ(top_->a0, 254);
@@ -15,7 +15,7 @@ TEST_F(CpuTestbench, TestAddiBne)
 
 TEST_F(CpuTestbench, TestLiAdd)
 {
-    assemble("asm/2_li_add.s");
+    setupTest("2_li_add");
     initSimulation();
     runSimulation(CYCLES);
     EXPECT_EQ(top_->a0, 1000);
@@ -23,7 +23,7 @@ TEST_F(CpuTestbench, TestLiAdd)
 
 TEST_F(CpuTestbench, TestLbuSb)
 {
-    assemble("asm/3_lbu_sb.s");
+    setupTest("3_lbu_sb");
     initSimulation();
     runSimulation(CYCLES);
     EXPECT_EQ(top_->a0, 300);
@@ -31,7 +31,7 @@ TEST_F(CpuTestbench, TestLbuSb)
 
 TEST_F(CpuTestbench, TestJalRet)
 {
-    assemble("asm/4_jal_ret.s");
+    setupTest("4_jal_ret");
     initSimulation();
     runSimulation(CYCLES);
     EXPECT_EQ(top_->a0, 53);
@@ -39,8 +39,8 @@ TEST_F(CpuTestbench, TestJalRet)
 
 TEST_F(CpuTestbench, TestPdf)
 {
-    assemble("asm/5_pdf.s");
-    setData("data/gaussian.mem");
+    setupTest("5_pdf");
+    setData("reference/gaussian.mem");
     initSimulation();
     runSimulation(CYCLES * 100);
     EXPECT_EQ(top_->a0, 15363);
