@@ -1,0 +1,40 @@
+
+a.out.reloc:     file format elf32-littleriscv
+architecture: riscv:rv32, flags 0x00000112:
+EXEC_P, HAS_SYMS, D_PAGED
+start address 0xbfc00000
+
+
+Disassembly of section .text:
+
+bfc00000 <main>:
+bfc00000:	10000413          	li	s0,256
+bfc00004:	00000513          	li	a0,0
+
+bfc00008 <light_on_loop>:
+bfc00008:	00a40023          	sb	a0,0(s0)
+bfc0000c:	034000ef          	jal	ra,bfc00040 <delay>
+bfc00010:	0ff00293          	li	t0,255
+bfc00014:	00551a63          	bne	a0,t0,bfc00028 <not_all_on>
+bfc00018:	00000513          	li	a0,0
+bfc0001c:	00a40023          	sb	a0,0(s0)
+bfc00020:	020000ef          	jal	ra,bfc00040 <delay>
+bfc00024:	fddff06f          	j	bfc00000 <main>
+
+bfc00028 <not_all_on>:
+bfc00028:	008000ef          	jal	ra,bfc00030 <increment_light>
+bfc0002c:	fddff06f          	j	bfc00008 <light_on_loop>
+
+bfc00030 <increment_light>:
+bfc00030:	00a50e33          	add	t3,a0,a0
+bfc00034:	001e0e13          	addi	t3,t3,1
+bfc00038:	000e0533          	add	a0,t3,zero
+bfc0003c:	00008067          	ret
+
+bfc00040 <delay>:
+bfc00040:	00200313          	li	t1,2
+
+bfc00044 <delay_loop>:
+bfc00044:	fff30313          	addi	t1,t1,-1
+bfc00048:	fe031ee3          	bnez	t1,bfc00044 <delay_loop>
+bfc0004c:	00008067          	ret
