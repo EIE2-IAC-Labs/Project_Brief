@@ -1,164 +1,461 @@
-<center>
+## Team members:
 
-## EIE2 Instruction Set Architecture & Compiler (IAC)
+[Add your team member names here]
 
----
-## Team Project - RISC-V RV32I Processor
+# Table of contents:
 
-**_Peter Cheung, V2.3 - 21 Nov 2025_**
-
----
-
-</center>
-
-## Objectives
-
-* To learn RISC-V 32-bit integer instruction set architecture
-* To implement a single-cycle RV32I instruction set in a microarchitecture
-* To implement the F1 starting light algorithm in RV32I assembly language
-* To verify your RV32I design
-* As stretched goal, to implement a simple pipelined version of the microarchitecture with hazard detection and mitigation
-* As a further stretched goal, add set-associative data cache to the pipelined RV32I
-* As a super streched goal, complete the RV32I processor
-
-<br>
-
-___
-
-## Learning the RV32I Instruction Set
-___
-
-Before you start the hardware design, every team member should learn the RV32I in some detail by jointly creating your team's assembly language program to implement the F1 starting light algorithm from Lab 3 in RV32I instructions.
-
-[This document](https://riscv.org/wp-content/uploads/2017/05/riscv-spec-v2.2.pdf) is v2.2 of the official RISC-V instruction set manual. You do not need to implement all of the instructions in it! The RV32I instructions are described in detail in section 2 (page 9). The table on page 104 is very useful for checking instruction encodings. You are only required to implement the instructions in the PDF reference program (although you can implement more as a super stretched goal)!
-
-Your CPU will be tested using your team's F1 program, the PDF reference program in `tb/reference`, and the verification tests in `tb/asm`. Your F1 program **MUST** use at least one subroutine, so that you **must** include the **Jump and Link (JAL)** instruction.
-
-<p align="center"> <img src="images/RISC-V_F1.jpg" /> </p><BR>
-
-Unlike Lab 3, the clock signal does not control a hardware counter or state machine directly. Instead it is used to clock the RISC-V processor to execute one instruction.  The Reset signal also resets only the processor to start the program, and is not used to reset counters or a state machine.  The trigger signal is used to tell RISC-V when to start the F1 light sequence.  How it is implemented in the RISC-V is not defined.  You can decide, for example, that the trigger is automatic -- as soon as the program starts, the F1 light sequence is triggered.
-
-You should also write your assembly language program using the following memory map.
-
-<p align="center"> <img src="images/memory.jpg" /> </p><BR>
-
-This memory map is chosen to help debugging your design later.  What is the size of the data and instruction memory specified by this map?  Remember, both instructions and data are 32-bits or 4 bytes.  RISC-V is a byte-addressing processor with least significant byte in lower address. This is called "little-endian". Furthermore, although RISC-V full addressing space is 2^32, which is huge, you do not need to specify memory that occupies the entire memory space. In fact, trying to do so will fail because the Verilator model cannot handle such a block of memory.
-
-<br>
-
-___
-
-## Single-Cycle RV32I Design
-___
-
->This is the basic goal for every team - to implement the basic RV32I instruction set by extending your Reduced RISC-V design in Lab 4.
-
-To simplify matters, you should assume that you have separate instruction and data memories.
-
-Similar to Lab 4, you must divide the task into roughly equal components, and each student will then be responsbile for one component.  You can continue your role as in Lab 4 or, to diversify your learning, deliberately assigning a different component to your team members. The assessment of this project coursework will be mostly based on individual contributions with a smaller component based on the team's success.  Details on assessment and deliverable are provided later in this project brief.
-
-You need to verify that your design works. A fully verified design will have to pass three tests:
-1. Your design should pass your team's F1 starting light program.
-2. Your design should also pass the reference program __"pdf.asm"__ provided in the folder *_"tb/reference"_*. Details about how this reference program works
-and what it does is given in the [markdown file](tb/reference/Reference_Prog.md) in this folder.
-3. Your design should also pass all five programs provided in the folder *_"tb/asm"_*. You should read about how these tests work in this [markdown file](tb/verification.md). Note that these tests all use the same instructions as the reference PDF program.
-
-<br>
-
-<p align="center"> <img src="images/single-cycle.jpg" /> </p><BR>
-
-<br>
-
-___
-## Stretch Goal 1: Pipelined RV32I Design
-___
-
->Once finished the basic goal, if your team have time, modify the the single-cycle processor to a pipelined processor.
-
-A simple solution is to handle data and control hazards in software - by identifying and inserting NOPs, or by re-ordering instructions to avoid hazards.
-
-For full credit, you are expected in implement hardware hazard detection, forwarding/bypassing or stalling hardware.
-
-As before, make sure that your design is working by successfully running the various tests.
-
-<br>
-
-___
-## Stretch Goal 2: Adding Data Memory Cache
-___
-
-As an additional stretch goal to the pipelined processor, you may also add data cache to your data memory. This is of course a "toy" exercise because
-your data memory is already a single-cycle memory and is very fast. Adding cache memory may make this slower, not faster.  However, in real designs,
-data memory could be quite slow. Adding cache memory will help performance.  Nevertheless, you may learn how cache memory works by implement
-it as an addition to your pipelined processor.
-
-The data cache capacity could be 4096 bytes (or 1k words).  For full credit, you are expected to implement at least a 2-set associative cache.
-
-<br>
-
-___
-## Stretch Goal 3: Full RV32I Design
-___
-> You may decide that it is easier to do this before or whilst creating a pipelined processor.
-
-If you really have time, then implement all RV32I base instructions (except for the FENCE, ECALL/EBREAK and CSR instructions). If you do this, it is recommended to add some more verification tests to demonstrate that they work. This can be done by adding the assembly file in `tb/asm` and adding a new TEST_F instance in `tb/tests/verify.cpp`.
-
-___
-
-## Deliverables
-___
-
-All deliverables must be via your Team's project coursework repo via the GitHub link you have provided for your team. The name of the repo has your team
-number at the end, and is private to your team, but accessible by myself.  All deliverables **must be** in the repo by *__23.59 Friday 12 December 2025__*
-when all coursework team repos must be frozen.
-
-Deliverables must include the following:
-1. A **brief** `README.md` file in the root directory that describes what your team has achieved. This is a **joint statement** for the team.
-2. Each individual's **personal statement** explaining what you contributed, a reflection about what you have learned in this project,
-mistakes you made, special design decisons, and what you might do differently if you were to do it again or have more time.
-This statement must be succinct and to the point, yet must include sufficient details for me to check against the commit history of the repo so that
-any claims can be verified. Including links to a selection of specific commits which demonstrate your work would be most helpful. If you work with
-another member of your group on a module, make sure to give them
-[co-author credit](https://docs.github.com/en/pull-requests/committing-changes-to-your-project/creating-and-editing-commits/creating-a-commit-with-multiple-authors#creating-co-authored-commits-on-the-command-line). Additionally, try to make meaningful commit messages.
-3. A folder called `rtl` with the source of your processor. If you have multiple versions due to the stretched goals, you may use branches/[tags](https://git-scm.com/book/en/v2/Git-Basics-Tagging). Your `README.md` file must provide sufficient explanation for me to understand what you have done and how to find your work on all branches/tags you wish to be assessed.  The `rtl` folder should also include a `README.md` file listing who wrote which module/file.
-4. A enhanced `tb` folder containing:
->* Your F1 program and evidence that your processor successfully executing the F1 program (e.g. short video).
->* The 'reference' program working with evidence (e.g. screenshot of the probability distribution function plot).
->* Results of running the specified test programs.
-
-You must also provide a Makefile or a shell script that allows me to build your processor model and run the tests provided in this repo.
-You must also provide an option to run your F1 program.
-
-<br>
-
-___
-
-## Assessment Criteria
-___
-
-Assessment for this coursework, which accounts for 25% of the entire two-terms IAC module, is divided into two components:
-1. Team achievement (40%) - This component of the marks is common to all team members and is dependent on the overall achievement of the team.
-2. Individual achievement (60%) - This component of the marks is awarded to individual student based on declaration by the team of the individual contribution,
-with verification based on evidence (e.g. based on the git commit and push profile of an individual), individual account of his/her contributions and reflections,
-and the actual deliverables by the individual in terms of SystemVerilog, C++ codes and/or test results.
-
-This table shows the level of team's achievement and the range of grade to be awarded.
-
-<p align="center"> <img src="images/team_grade.jpg">
-
-Here are the criteria on which individual assessment will be based.
-
-<p align="center"> <img src="images/individual.jpg">
-
-<br>
+- [Quick Start](#quick-start)
+- [Overview](#overview)
+- [Key Features & Achievements](#key-features--achievements)
+- [Repo Structure](#repo-structure)
+    - [Single Cycle RV32I Implementation](#single-cycle-rv32i-implementation)
+    - [Stretch goal 1: Pipelined RV32I Implementation](#stretch-goal-1-pipelined-rv32i-implementation)
+    - [Stretch goal 2: Memory Cached Pipelined RV32I](#stretch-goal-2-memory-cached-pipelined-rv32i)
+    - [Stretch goal 3: Full Instruction Set](#stretch-goal-3-full-instruction-set)
+    - [Our design decision](#our-design-decision)
+- [Verification & Testing](#verification--testing)
+- [Running](#running)
+    - [single cycle](#single-cycle)
+    - [pipelined](#pipelined)
 
 ---
-## Tips
+
+# Quick Start
+
+We successfully completed the Single-Cycle CPU implementation and all stretch goals: Pipelined processor, Two-Way Set Associative Write-Back Cache, and Full RV32I Design. Our implementations are organized across multiple branches for clarity:
+
+| Branch | Description |
+| ------ | ----------- |
+| `Single-Cycle-RV32I-Implementation` | Single-cycle CPU with basic instruction subset |
+| `Pipelined-RV32I-Implementation` | 5-stage pipelined processor with hazard detection |
+| `Memory-Cached-Pipelined-RV32I` | Pipelined CPU with 2-way set-associative cache |
+| `Full-Instruction-Set-(Final-CPU)/main` | Complete RV32I with all features integrated |
+
+To access each version:
+```bash
+git checkout <branch-name>
+```
+
+### Testing Instructions
+
+To run the provided test suite:
+```bash
+cd tb
+./doit.sh              # For single-cycle
+./doit2.sh             # For pipelined (also tests single-cycle for comparison)
+./doit2.sh pipelined   # For pipelined only
+```
+
+### VBuddy Demonstrations
+
+To run F1 starting lights:
+```bash
+cd tb
+./run_f1.sh
+```
+
+To run PDF (Probability Density Function) visualization:
+```bash
+cd tb
+./run_pdf.sh reference/gaussian.mem    # or noisy.mem, triangle.mem
+```
+
 ---
 
-* Agree a coding style between your team and stick to it. [This document](https://github.com/lowRISC/style-guides/blob/master/VerilogCodingStyle.md) contains many suggested practices which are good to follow.
-* Suffix module inputs and outputs with `_i` or `_o` respectively. This will make it much easier to understand what you are looking at in Gtkwave.
-* Setup a `.gitignore` file to prevent yourself from committing generated files, the `obj_dir` directory and `vcd` files into Git
-* Review each file before you stage and commit it into Git. You will catch many errors this way. VS Code has [in-built tooling]( https://code.visualstudio.com/docs/sourcecontrol/overview) for Git which you should try to get familiar with.
-* Write [useful commit messages](https://cbea.ms/git-commit/)
-* Work on your own branches on Git and get other members of your team to review your code before merging it in to the main branch
+# Overview
+
+This repository contains our team’s complete implementation of an RV32I processor, developed progressively across several milestones and maintained across multiple branches for clarity and traceability. The project began with a fully working single-cycle CPU that implemented the core RV32I instruction subset. Building on this foundation, we extended the design into a five-stage pipelined processor that supported complete forwarding and hazard-detection logic, enabling correct resolution of data hazards, load–use dependencies, and control-flow changes due to branches and jumps. The final stage of development introduced a realistic 4 KiB, two-way set-associative write-back data cache, bringing the design closer to modern processor memory hierarchies by supporting tag checks across both ways, dirty and valid tracking, LRU replacement, and multi-cycle miss handling integrated with the pipeline’s stall signals.
+
+---
+
+# Key Features & Achievements
+
+Our processor implementation includes the following accomplishments:
+
+- **Complete RV32I Base Instruction Set** (excluding ECALL/EBREAK/CSR/FENCE)
+  - 40+ instructions including all R-type, I-type, S-type, B-type, U-type, and J-type operations
+  - Full support for arithmetic, logic, shift, load/store, branch, and jump instructions
+
+- **5-Stage Pipeline Architecture** (IF → ID → EX → MEM → WB)
+  - Comprehensive hazard detection unit
+  - Complete data forwarding logic
+  - Proper control signal propagation through pipeline stages
+  - Pipeline flushing for branch/jump instructions
+
+- **Advanced Memory System**
+  - 4 KiB two-way set-associative write-back data cache
+  - LRU (Least Recently Used) replacement policy
+  - Multi-cycle miss handling with proper stall propagation
+  - Dirty bit tracking and write-back on eviction
+  - Support for byte, halfword, and word operations
+
+- **Comprehensive Verification**
+  - 15 assembly test programs covering all instruction types
+  - Cache-specific tests (hits, misses, set conflicts)
+  - Visual demonstrations (F1 lights with LFSR random delays, PDF calculations)
+  - GTKWave waveform analysis for debugging
+  - All tests passing on both single-cycle and pipelined implementations
+
+---
+
+## Top Level Contributions
+
+| Section               | Ambre | Sumukh | Lila | Deniz |
+| --------------------- | ----- | ----- | ---- | ----- |
+| Repo Setup            |       | `X`   |      |       |
+| Single cycle          | `X`   | `X`   | `X`  | `X`   |
+| Pipelining            | `X`   | `X`   | `X`  | `X`   |
+| Cache                 | `X`   | `X`   | `X`  | `X`   |
+
+
+
+## Team members and Statements:
+
+| Team Member     | GitHub                                                | CID      | Email           | Link to Personal Statement                        |
+
+
+---
+
+# Repo Structure
+
+Our repository is organised into multiple branches that each correspond to one major stage of the project: the single-cycle processor, the pipelined implementation of it, then cached pipelined, and finally the full RV32I instruction-complete implementation. We also worked on our individual branches to not disrupt the whole project we were working on. Once one person completed their section and the team was happy with their implementation, we created PRs and merged with main.
+
+For easy testing, we created new branches with the final commit of a specific section in it. For example, in the "Single-Cycle-RV32I-Implementation", we placed the final commit that had the fully implemented single cycle CPU (without the pipelining/cache).
+
+## Single Cycle RV32I Implementation
+
+The branch "Single-Cycle-RV32I-Implementation" contains our initial single-cycle RV32I CPU implementing the basic subset of instructions required
+
+**Instructions Implemented:**
+- R-type: `ADD`, `SUB`, `SLL`, `SLT`, `SLTU`, `XOR`, `SRL`, `SRA`, `OR`, `AND`
+- I-type (ALU): `ADDI`, `SLTI`, `SLTIU`, `XORI`, `ORI`, `ANDI`, `SLLI`, `SRLI`, `SRAI`
+- I-type (Load): `LBU`, `LB`, `LH`, `LW`, `LHU`
+- I-type (Jump): `JALR`
+- S-type: `SB`, `SH`, `SW`
+- B-type: `BEQ`, `BNE`, `BLT`, `BGE`, `BLTU`, `BGEU`
+- U-type: `LUI`
+- J-type: `JAL`
+
+Directory structure:
+```
+rtl/
+├── alu.sv
+├── control_unit.sv
+├── data_mem.sv
+├── datapath.sv
+├── extend.sv
+├── instr_mem.sv
+├── pc_reg.sv
+├── register_file.sv
+└── top.sv
+```
+
+## Stretch goal 1: Pipelined RV32I Implementation
+
+The branch "Pipelined-RV32I-Implementation" introduces our full 5-stage pipeline (IF → ID → EX → MEM → WB), hazard detection, forwarding, and pipeline registers. It still uses the basic instruction subset and a direct memory module without caching.
+
+Directory structure:
+```
+rtl/
+├── pipelined/
+│   ├── exe_mem_reg.sv
+│   ├── execute.sv
+│   ├── forward_unit.sv
+│   ├── hazard_unit.sv
+│   ├── id_ex_reg.sv
+│   ├── if_id_reg.sv
+│   ├── mem_wb_reg.sv
+│   ├── pc_reg_pipe.sv
+│   ├── tb_execute.sv
+│   └── top_pipelined.sv
+├── shared/
+│   ├── alu.sv
+│   ├── control_unit.sv
+│   ├── data_mem.sv
+│   ├── extend.sv
+│   ├── instr_mem.sv
+│   ├── pc_reg.sv
+│   └── register_file.sv
+└── single_cycle/
+    ├── datapath.sv
+    └── top.sv
+```
+
+**Key Additions:**
+- Pipeline registers for each stage (IF/ID, ID/EX, EX/MEM, MEM/WB)
+- Hazard detection unit for load-use hazards
+- Forwarding unit for data hazards (EX-to-EX, MEM-to-EX forwarding)
+- Pipeline flushing mechanism for control hazards
+- Proper multicycle control signal propagation
+
+## Stretch goal 2: Memory Cached Pipelined RV32I
+
+For this branch "Memory-Cached-Pipelined-RV32I", we kept the 5-stage pipeline from the previous milestone and added a real cache subsystem to replace the simple data memory.
+
+Directory structure:
+```
+rtl/
+├── pipelined/
+│   ├── exe_mem_reg.sv
+│   ├── execute.sv
+│   ├── forward_unit.sv
+│   ├── hazard_unit.sv
+│   ├── id_ex_reg.sv
+│   ├── if_id_reg.sv
+│   ├── mem_wb_reg.sv
+│   ├── pc_reg_pipe.sv
+│   ├── tb_execute.sv
+│   └── top_pipelined.sv
+├── shared/
+│   ├── alu.sv
+│   ├── control_unit.sv
+│   ├── data_cache.sv
+│   ├── data_mem.sv
+│   ├── extend.sv
+│   ├── instr_mem.sv
+│   ├── pc_reg.sv
+│   └── register_file.sv
+└── single_cycle/
+    ├── datapath.sv
+    └── top.sv
+```
+
+**Major Additions:**
+- 4 KiB 2-way set-associative write-back cache (128 sets, 16-byte lines)
+- Tag, valid, and dirty bit arrays for both ways
+- LRU bit per set for replacement policy
+- Multi-cycle miss handling with automatic stall propagation
+- Cache-aware hazard unit modifications
+- Shadow registers for handling misses during pipeline operation
+
+**Cache Specifications:**
+- Total size: 4 KiB
+- Associativity: 2-way set-associative
+- Line size: 16 bytes (4 words)
+- Number of sets: 128
+- Tag bits: 21 bits
+- Index bits: 7 bits
+- Offset bits: 4 bits
+
+This branch integrates a realistic memory subsystem that significantly increases realism and complexity. Adding a cache required additional stall pathways, dirty-bit handling, proper line fill behaviour, and full tag/index/offset decomposition. This significantly increased realism and complexity compared to the earlier pipeline.
+
+## Stretch goal 3: Full Instruction Set
+
+Finally in the brache "Full-Instruction-Set-(Final-CPU)/main" is our final, fully functional processor supporting the entire RV32I base ISA (except ECALL/EBREAK/CSR/FENCE). All pipeline, hazard, forwarding, and cache features are integrated and passing all reference tests.
+
+Directory structure:
+```
+rtl/
+├── pipelined/
+│   ├── exe_mem_reg.sv
+│   ├── execute.sv
+│   ├── forward_unit.sv
+│   ├── hazard_unit.sv
+│   ├── id_ex_reg.sv
+│   ├── if_id_reg.sv
+│   ├── mem_wb_reg.sv
+│   ├── pc_reg_pipe.sv
+│   ├── tb_execute.sv
+│   └── top_pipelined.sv
+├── shared/
+│   ├── alu.sv
+│   ├── control_unit.sv
+│   ├── data_cache.sv
+│   ├── data_mem.sv
+│   ├── extend.sv
+│   ├── instr_mem.sv
+│   ├── pc_reg.sv
+│   └── register_file.sv
+└── single_cycle/
+    ├── datapath.sv
+    └── top.sv
+```
+
+This is our final and most complete design. Here we extended the instruction set to include all RV32I ALU, load/store, branch, and shift operations, and we fixed all pipeline/control/cache interactions until every test case passed. This branch represents the culmination of all architectural, verification, and debugging work.
+
+## Our design decision:
+
+![](images/final.png)
+
+The diagram above shows our complete processor architecture with all components integrated, including the pipelined datapath, hazard detection and forwarding units, and the two-way set-associative cache.
+
+---
+
+# Verification & Testing
+
+Our processor underwent extensive verification through multiple testing approaches to ensure correctness across all implementations.
+
+## Test Suite Overview
+
+We developed and utilized 15 comprehensive assembly test programs:
+
+### Provided Tests (1-5)
+1. **1_addi_bne.s** - Basic ADDI and BNE instructions
+2. **2_li_add.s** - Load immediate and ADD operations
+3. **3_lbu_sb.s** - Load byte unsigned and store byte
+4. **4_jal_ret.s** - JAL and JALR (function calls and returns)
+5. **5_pdf.s** - Probability density function calculation (1M+ cycles)
+
+### Extended Instruction Set Tests (10-15)
+Created to verify full RV32I implementation:
+- **10_memory_offsets.s** - Load/store with various offsets
+- **11_bitwise.s** - XOR, OR, AND, XORI, ORI, ANDI operations
+- **12_shifts.s** - SLL, SRL, SRA, SLLI, SRLI, SRAI instructions
+- **13_store_halfwords.s** - Halfword store operations
+- **14_branches.s** - All branch types (BEQ, BNE, BLT, BGE, BLTU, BGEU)
+- **15_comparisons.s** - SLT, SLTU, SLTI, SLTIU instructions
+
+### Cache-Specific Tests (8-9)
+Written to verify cache behavior:
+- **8_cache_hit.s** - Repeated loads to verify cache hits
+- **9_cache_miss_set_conflict.s** - Set conflicts and eviction behavior
+
+## Testing Methodology
+
+### Automated Testing
+Our automated test framework uses Verilator for simulation:
+- Compiles SystemVerilog RTL to C++ model
+- Runs each test program for specified cycles (typically 10,000)
+- Validates output register `a0` against expected values
+- Generates waveforms (`.vcd`) for debugging
+- Produces disassembly (`.dis`) for verification
+
+All tests are executed via shell scripts:
+```bash
+./doit.sh              # Runs all tests on single-cycle
+./doit2.sh             # Runs all tests and compares single vs. pipelined
+./doit2.sh pipelined   # Runs all tests on pipelined only
+```
+
+### Visual Verification with VBuddy
+Two demonstration programs run on VBuddy hardware:
+
+**F1 Starting Lights:**
+- Implements F1 starting sequence with 8 LEDs
+- Pattern: 2^n + 1 (1 → 3 → 7 → 15 → 31 → 63 → 127 → 255)
+- Enhanced version includes LFSR-based random delays using XOR feedback
+- Demonstrates branches, subroutines, and sequential logic
+
+**PDF (Probability Density Function):**
+- Plots three distributions: Gaussian, Noisy, Triangle
+- Processes data from memory (256 values)
+- Displays results on VBuddy screen
+- Tests load operations, memory access, and arithmetic
+
+### Waveform Analysis
+Used GTKWave extensively for:
+- Cache state machine verification
+- Pipeline stall signal propagation
+- Forwarding path validation
+- Branch flush behavior
+- Multi-cycle operations timing
+
+## Test Results
+
+All 15 assembly tests pass successfully on:
+- Single-cycle implementation
+- Pipelined implementation
+- Cached pipelined implementation
+- Full RV32I implementation
+
+**Example Test Output:**
+```
+[PASS] 1_addi_bne      - Expected: 254, Got: 254
+[PASS] 2_li_add        - Expected: 1000, Got: 1000
+[PASS] 3_lbu_sb        - Expected: 300, Got: 300
+[PASS] 4_jal_ret       - Expected: 53, Got: 53
+[PASS] 5_pdf           - Expected: 15363, Got: 15363
+[PASS] 8_cache_hit     - Expected: 126, Got: 126
+[PASS] 9_cache_miss... - Expected: 300, Got: 300
+...
+All tests passed!
+```
+
+### Known Debug Solutions
+
+During development, we encountered and resolved several critical issues:
+
+1. **Instruction Memory Fetch Issue** - Instructions weren't being fetched properly initially. Fixed by correcting timing in instruction memory module.
+
+2. **Pipeline Register Timing** - Pipeline registers were initially on positive edge, causing read-before-write issues. Changed to negative edge for proper operation.
+
+3. **F1 Lights Blinking** - First LED was blinking unexpectedly. Root cause: pattern calculation done in two operations without temporary register. Fixed by using temp register for atomic updates.
+
+4. **Cache FSM Timing** - Cache state machine timing didn't match memory timing. Resolved through careful state machine redesign and proper clock edge management.
+
+5. **Pipeline Stall Propagation** - Cache misses weren't properly stalling the pipeline. Fixed by adding stall signal to all pipeline registers and implementing shadow registers.
+
+---
+
+# Running:
+
+## Prerequisites
+- RISC-V GNU Toolchain
+- Verilator (for simulation)
+- VBuddy hardware (for visual demonstrations)
+- GTKWave (optional, for waveform viewing)
+
+## Single Cycle
+```bash
+cd tb
+./doit.sh
+```
+
+## Pipelined
+```bash
+cd tb
+./doit2.sh              # Tests both single-cycle and pipelined
+./doit2.sh pipelined    # Tests pipelined only
+```
+
+## F1 Lights Demo
+```bash
+cd tb
+./run_f1.sh
+```
+Press the VBuddy rotary button to start the sequence.
+
+## PDF Demo
+```bash
+cd tb
+./run_pdf.sh reference/gaussian.mem
+./run_pdf.sh reference/noisy.mem
+./run_pdf.sh reference/triangle.mem
+```
+
+## Viewing Waveforms
+After running tests, waveforms are saved in `tb/test_out/<test_name>/`:
+```bash
+gtkwave tb/test_out/1_addi_bne/waveform_single.vcd
+```
+
+---
+
+# Design Challenges & Solutions
+
+## Cache Integration
+Integrating the 2-way set-associative cache required careful coordination with the pipeline. Key challenges included:
+- **Stall Signal Propagation**: Ensuring cache misses properly stalled all pipeline stages without losing instructions
+- **Shadow Registers**: Implementing shadow registers to maintain pipeline state during multi-cycle cache operations
+- **Write-back Handling**: Managing dirty bit tracking and write-back on eviction
+
+## Pipeline Hazards
+The pipelined implementation required sophisticated hazard handling:
+- **Data Hazards**: Implemented forwarding paths from MEM and WB stages to EX stage
+- **Load-Use Hazards**: Added stall logic in hazard unit for load-followed-by-use scenarios
+- **Control Hazards**: Implemented pipeline flushing for branches and jumps
+
+## Testing Strategy
+To ensure comprehensive verification:
+- Created modular test scripts that work for both single-cycle and pipelined versions
+- Developed cache-specific tests targeting hits, misses, and conflicts
+- Standardized test output structure in `tb/test_out/` for consistent file organization
+- Used LFSR-based random delays in F1 test to verify complex instruction sequences
+
+---
+
+## Resources
+
+- [RISC-V Specification](https://riscv.org/technical/specifications/)
+- [RISC-V Instruction Set Reference Card](https://cs.sfu.ca/~ashriram/Courses/CS295/assets/notebooks/RISCV/RISCV_CARD.pdf)
+- Course materials: EIE2 Instruction Set Architecture & Compiler (IAC)
